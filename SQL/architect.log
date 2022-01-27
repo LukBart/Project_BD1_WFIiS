@@ -1,0 +1,1148 @@
+0    [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ArchitectUtils  - Log4J configured successfully
+504  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+592  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+593  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+644  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+3084 [Thread-5] ERROR ca.sqlpower.architect.swingui.action.CheckForUpdateAction  - Fail to retrieve current version number!
+6765 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+CREATE TABLE public.Wlasciciel (
+                id_wlasciciel INTEGER NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                CONSTRAINT wlasciciel_pk PRIMARY KEY (id_wlasciciel)
+)
+6767 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiegarnia (
+                id_ksiegarnia INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                Ulica VARCHAR(50) NOT NULL,
+                Numer VARCHAR(4) NOT NULL,
+                Kod VARCHAR(6) NOT NULL,
+                Miejscowosc VARCHAR(50) NOT NULL,
+                id_wlasciciel INTEGER NOT NULL,
+                CONSTRAINT ksiegarnia_pk PRIMARY KEY (id_ksiegarnia)
+)
+6768 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kadra_Pracownicza (
+                id_kadra_pracownicza INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT kadra_pracownicza_pk PRIMARY KEY (id_kadra_pracownicza)
+)
+6768 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Pracownik (
+                id_pracownik INTEGER NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Plec VARCHAR(1),
+                Telefon VARCHAR(9),
+                Email VARCHAR(50),
+                id_kadra_pracownicza INTEGER NOT NULL,
+                CONSTRAINT pracownik_pk PRIMARY KEY (id_pracownik)
+)
+6768 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Dzial (
+                id_dzial INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                id_kadra_pracownicza INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                CONSTRAINT dzial_pk PRIMARY KEY (id_dzial)
+)
+6769 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kasjer (
+                id_kasjer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Stanowisko INTEGER NOT NULL,
+                CONSTRAINT kasjer_pk PRIMARY KEY (id_kasjer)
+)
+6769 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Transakcja (
+                id_transakcja INTEGER NOT NULL,
+                id_kasjer INTEGER NOT NULL,
+                Data TIMESTAMP NOT NULL,
+                CONSTRAINT transakcja_pk PRIMARY KEY (id_transakcja)
+)
+6769 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Menedzer (
+                id_menedzer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Biuro VARCHAR(50) NOT NULL,
+                CONSTRAINT menedzer_pk PRIMARY KEY (id_menedzer)
+)
+6769 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Sprzatacz (
+                id_sprzatacz INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Sprzet VARCHAR(100) NOT NULL,
+                CONSTRAINT sprzatacz_pk PRIMARY KEY (id_sprzatacz)
+)
+6769 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Gatunek (
+                id_gatunek INTEGER NOT NULL,
+                id_dzial INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT gatunek_pk PRIMARY KEY (id_gatunek)
+)
+6770 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiazka (
+                id_ksiazka INTEGER NOT NULL,
+                Autor VARCHAR(50) NOT NULL,
+                Tytul VARCHAR(50) NOT NULL,
+                id_gatunek INTEGER NOT NULL,
+                Cena DOUBLE PRECISION NOT NULL,
+                CONSTRAINT ksiazka_pk PRIMARY KEY (id_ksiazka)
+)
+6770 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kopia_Ksiazki (
+                id_kopia INTEGER NOT NULL,
+                id_transakcja INTEGER NOT NULL,
+                id_ksiazka INTEGER NOT NULL,
+                CONSTRAINT kopia_ksiazki_pk PRIMARY KEY (id_kopia)
+)
+6773 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+ALTER TABLE public.Ksiegarnia ADD CONSTRAINT wlasciciel_ksiegarnia_fk
+FOREIGN KEY (id_wlasciciel)
+REFERENCES public.Wlasciciel (id_wlasciciel)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6776 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT ksiegarnia_dzial_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6778 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kadra_Pracownicza ADD CONSTRAINT ksiegarnia_kadra_pracownicza_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6781 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Pracownik ADD CONSTRAINT kadra_pracownicza_pracownik_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6783 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT kadra_pracownicza_dzial_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6785 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kasjer ADD CONSTRAINT pracownik_kasjer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6787 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Sprzatacz ADD CONSTRAINT pracownik_sprzatacz_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6789 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Menedzer ADD CONSTRAINT pracownik_menedzer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6792 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Gatunek ADD CONSTRAINT dzial_gatunek_fk
+FOREIGN KEY (id_dzial)
+REFERENCES public.Dzial (id_dzial)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6795 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Transakcja ADD CONSTRAINT kasjer_transakcja_fk
+FOREIGN KEY (id_kasjer)
+REFERENCES public.Kasjer (id_kasjer)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6796 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT transakcja_kopia_ksiazki_fk
+FOREIGN KEY (id_transakcja)
+REFERENCES public.Transakcja (id_transakcja)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6797 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Ksiazka ADD CONSTRAINT gatunek_ksiazka_fk
+FOREIGN KEY (id_gatunek)
+REFERENCES public.Gatunek (id_gatunek)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6798 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT ksiazka_kopia_ksiazki_fk
+FOREIGN KEY (id_ksiazka)
+REFERENCES public.Ksiazka (id_ksiazka)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+6802 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.swingui.SQLScriptDialog  - The list size is :25
+0    [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ArchitectUtils  - Log4J configured successfully
+496  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+570  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+571  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+601  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+3425 [Thread-5] ERROR ca.sqlpower.architect.swingui.action.CheckForUpdateAction  - Fail to retrieve current version number!
+42491 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.swingui.PlayPen  - Drop: I am over dtde=java.awt.dnd.DropTargetDropEvent[source=java.awt.dnd.DropTarget@7a3b3b2d]
+49869 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.swingui.PlayPen  - Drop: I am over dtde=java.awt.dnd.DropTargetDropEvent[source=java.awt.dnd.DropTarget@7a3b3b2d]
+51437 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.swingui.PlayPen  - Drop: I am over dtde=java.awt.dnd.DropTargetDropEvent[source=java.awt.dnd.DropTarget@7a3b3b2d]
+126091 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+CREATE TABLE public.Wlasciciel (
+                id_wlasciciel INTEGER NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                CONSTRAINT wlasciciel_pk PRIMARY KEY (id_wlasciciel)
+)
+126091 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiegarnia (
+                id_ksiegarnia INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                Ulica VARCHAR(50) NOT NULL,
+                Numer VARCHAR(4) NOT NULL,
+                Kod VARCHAR(6) NOT NULL,
+                Miejscowosc VARCHAR(50) NOT NULL,
+                id_wlasciciel INTEGER NOT NULL,
+                CONSTRAINT ksiegarnia_pk PRIMARY KEY (id_ksiegarnia)
+)
+126091 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kadra_Pracownicza (
+                id_kadra_pracownicza INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT kadra_pracownicza_pk PRIMARY KEY (id_kadra_pracownicza)
+)
+126092 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Pracownik (
+                id_pracownik INTEGER NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Plec VARCHAR(1),
+                Telefon VARCHAR(9),
+                Email VARCHAR(50),
+                id_kadra_pracownicza INTEGER NOT NULL,
+                CONSTRAINT pracownik_pk PRIMARY KEY (id_pracownik)
+)
+126092 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Dzial (
+                id_dzial INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                id_kadra_pracownicza INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                CONSTRAINT dzial_pk PRIMARY KEY (id_dzial)
+)
+126092 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kasjer (
+                id_kasjer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Stanowisko INTEGER NOT NULL,
+                CONSTRAINT kasjer_pk PRIMARY KEY (id_kasjer)
+)
+126092 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Transakcja (
+                id_transakcja INTEGER NOT NULL,
+                id_kasjer INTEGER NOT NULL,
+                Data TIMESTAMP NOT NULL,
+                CONSTRAINT transakcja_pk PRIMARY KEY (id_transakcja)
+)
+126093 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Menedzer (
+                id_menedzer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Biuro VARCHAR(50) NOT NULL,
+                CONSTRAINT menedzer_pk PRIMARY KEY (id_menedzer)
+)
+126093 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Sprzatacz (
+                id_sprzatacz INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Sprzet VARCHAR(100) NOT NULL,
+                CONSTRAINT sprzatacz_pk PRIMARY KEY (id_sprzatacz)
+)
+126093 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Gatunek (
+                id_gatunek INTEGER NOT NULL,
+                id_dzial INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT gatunek_pk PRIMARY KEY (id_gatunek)
+)
+126093 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiazka (
+                id_ksiazka INTEGER NOT NULL,
+                id_gatunek INTEGER NOT NULL,
+                Autor VARCHAR(50) NOT NULL,
+                Tytul VARCHAR(50) NOT NULL,
+                Cena DOUBLE PRECISION NOT NULL,
+                CONSTRAINT ksiazka_pk PRIMARY KEY (id_ksiazka)
+)
+126094 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kopia_Ksiazki (
+                id_kopia INTEGER NOT NULL,
+                id_transakcja INTEGER NOT NULL,
+                id_ksiazka INTEGER NOT NULL,
+                CONSTRAINT kopia_ksiazki_pk PRIMARY KEY (id_kopia)
+)
+126094 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+ALTER TABLE public.Ksiegarnia ADD CONSTRAINT wlasciciel_ksiegarnia_fk
+FOREIGN KEY (id_wlasciciel)
+REFERENCES public.Wlasciciel (id_wlasciciel)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126095 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT ksiegarnia_dzial_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126096 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kadra_Pracownicza ADD CONSTRAINT ksiegarnia_kadra_pracownicza_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126097 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Pracownik ADD CONSTRAINT kadra_pracownicza_pracownik_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126097 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT kadra_pracownicza_dzial_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126098 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kasjer ADD CONSTRAINT pracownik_kasjer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126098 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Sprzatacz ADD CONSTRAINT pracownik_sprzatacz_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126098 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Menedzer ADD CONSTRAINT pracownik_menedzer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126099 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Gatunek ADD CONSTRAINT dzial_gatunek_fk
+FOREIGN KEY (id_dzial)
+REFERENCES public.Dzial (id_dzial)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126100 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Transakcja ADD CONSTRAINT kasjer_transakcja_fk
+FOREIGN KEY (id_kasjer)
+REFERENCES public.Kasjer (id_kasjer)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126100 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT transakcja_kopia_ksiazki_fk
+FOREIGN KEY (id_transakcja)
+REFERENCES public.Transakcja (id_transakcja)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126101 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Ksiazka ADD CONSTRAINT gatunek_ksiazka_fk
+FOREIGN KEY (id_gatunek)
+REFERENCES public.Gatunek (id_gatunek)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126101 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT ksiazka_kopia_ksiazki_fk
+FOREIGN KEY (id_ksiazka)
+REFERENCES public.Ksiazka (id_ksiazka)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+126105 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.swingui.SQLScriptDialog  - The list size is :25
+0    [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ArchitectUtils  - Log4J configured successfully
+498  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+566  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+567  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+602  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+3215 [Thread-5] ERROR ca.sqlpower.architect.swingui.action.CheckForUpdateAction  - Fail to retrieve current version number!
+0    [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ArchitectUtils  - Log4J configured successfully
+595  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+667  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+667  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+699  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+3315 [Thread-5] ERROR ca.sqlpower.architect.swingui.action.CheckForUpdateAction  - Fail to retrieve current version number!
+80454044 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+CREATE TABLE public.Wlasciciel (
+                id_wlasciciel INTEGER NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                CONSTRAINT wlasciciel_pk PRIMARY KEY (id_wlasciciel)
+)
+80454045 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiegarnia (
+                id_ksiegarnia INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                Ulica VARCHAR(50) NOT NULL,
+                Numer VARCHAR(4) NOT NULL,
+                Kod VARCHAR(6) NOT NULL,
+                Miejscowosc VARCHAR(50) NOT NULL,
+                id_wlasciciel INTEGER NOT NULL,
+                CONSTRAINT ksiegarnia_pk PRIMARY KEY (id_ksiegarnia)
+)
+80454045 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kadra_Pracownicza (
+                id_kadra_pracownicza INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT kadra_pracownicza_pk PRIMARY KEY (id_kadra_pracownicza)
+)
+80454046 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Pracownik (
+                id_pracownik INTEGER NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Plec VARCHAR(1),
+                Telefon VARCHAR(9),
+                Email VARCHAR(50),
+                id_kadra_pracownicza INTEGER NOT NULL,
+                CONSTRAINT pracownik_pk PRIMARY KEY (id_pracownik)
+)
+80454046 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Dzial (
+                id_dzial INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                id_kadra_pracownicza INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                CONSTRAINT dzial_pk PRIMARY KEY (id_dzial)
+)
+80454046 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kasjer (
+                id_kasjer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Stanowisko INTEGER NOT NULL,
+                CONSTRAINT kasjer_pk PRIMARY KEY (id_kasjer)
+)
+80454047 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Transakcja (
+                id_transakcja INTEGER NOT NULL,
+                id_kasjer INTEGER NOT NULL,
+                Data TIMESTAMP NOT NULL,
+                CONSTRAINT transakcja_pk PRIMARY KEY (id_transakcja)
+)
+80454047 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Menedzer (
+                id_menedzer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Biuro VARCHAR(50) NOT NULL,
+                CONSTRAINT menedzer_pk PRIMARY KEY (id_menedzer)
+)
+80454047 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Sprzatacz (
+                id_sprzatacz INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Sprzet VARCHAR(100) NOT NULL,
+                CONSTRAINT sprzatacz_pk PRIMARY KEY (id_sprzatacz)
+)
+80454047 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Gatunek (
+                id_gatunek INTEGER NOT NULL,
+                id_dzial INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT gatunek_pk PRIMARY KEY (id_gatunek)
+)
+80454048 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiazka (
+                id_ksiazka INTEGER NOT NULL,
+                id_gatunek INTEGER NOT NULL,
+                Autor VARCHAR(50) NOT NULL,
+                Tytul VARCHAR(50) NOT NULL,
+                Cena DOUBLE PRECISION NOT NULL,
+                CONSTRAINT ksiazka_pk PRIMARY KEY (id_ksiazka)
+)
+80454048 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kopia_Ksiazki (
+                id_kopia INTEGER NOT NULL,
+                id_transakcja INTEGER NOT NULL,
+                id_ksiazka INTEGER NOT NULL,
+                CONSTRAINT kopia_ksiazki_pk PRIMARY KEY (id_kopia)
+)
+80454049 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+ALTER TABLE public.Ksiegarnia ADD CONSTRAINT wlasciciel_ksiegarnia_fk
+FOREIGN KEY (id_wlasciciel)
+REFERENCES public.Wlasciciel (id_wlasciciel)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454049 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT ksiegarnia_dzial_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454050 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kadra_Pracownicza ADD CONSTRAINT ksiegarnia_kadra_pracownicza_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454051 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Pracownik ADD CONSTRAINT kadra_pracownicza_pracownik_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454051 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT kadra_pracownicza_dzial_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454052 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kasjer ADD CONSTRAINT pracownik_kasjer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454053 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Sprzatacz ADD CONSTRAINT pracownik_sprzatacz_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454054 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Menedzer ADD CONSTRAINT pracownik_menedzer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454055 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Gatunek ADD CONSTRAINT dzial_gatunek_fk
+FOREIGN KEY (id_dzial)
+REFERENCES public.Dzial (id_dzial)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454057 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Transakcja ADD CONSTRAINT kasjer_transakcja_fk
+FOREIGN KEY (id_kasjer)
+REFERENCES public.Kasjer (id_kasjer)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454057 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT transakcja_kopia_ksiazki_fk
+FOREIGN KEY (id_transakcja)
+REFERENCES public.Transakcja (id_transakcja)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454058 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Ksiazka ADD CONSTRAINT gatunek_ksiazka_fk
+FOREIGN KEY (id_gatunek)
+REFERENCES public.Gatunek (id_gatunek)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454060 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT ksiazka_kopia_ksiazki_fk
+FOREIGN KEY (id_ksiazka)
+REFERENCES public.Ksiazka (id_ksiazka)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80454067 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.swingui.SQLScriptDialog  - The list size is :25
+80483114 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+CREATE TABLE public.Wlasciciel (
+                id_wlasciciel INTEGER NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                CONSTRAINT wlasciciel_pk PRIMARY KEY (id_wlasciciel)
+)
+80483114 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiegarnia (
+                id_ksiegarnia INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                Ulica VARCHAR(50) NOT NULL,
+                Numer VARCHAR(4) NOT NULL,
+                Kod VARCHAR(6) NOT NULL,
+                Miejscowosc VARCHAR(50) NOT NULL,
+                id_wlasciciel INTEGER NOT NULL,
+                CONSTRAINT ksiegarnia_pk PRIMARY KEY (id_ksiegarnia)
+)
+80483115 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kadra_Pracownicza (
+                id_kadra_pracownicza INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT kadra_pracownicza_pk PRIMARY KEY (id_kadra_pracownicza)
+)
+80483115 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Pracownik (
+                id_pracownik INTEGER NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Plec VARCHAR(1),
+                Telefon VARCHAR(9),
+                Email VARCHAR(50),
+                id_kadra_pracownicza INTEGER NOT NULL,
+                CONSTRAINT pracownik_pk PRIMARY KEY (id_pracownik)
+)
+80483115 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Dzial (
+                id_dzial INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                id_kadra_pracownicza INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                CONSTRAINT dzial_pk PRIMARY KEY (id_dzial)
+)
+80483116 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kasjer (
+                id_kasjer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Stanowisko INTEGER NOT NULL,
+                CONSTRAINT kasjer_pk PRIMARY KEY (id_kasjer)
+)
+80483116 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Transakcja (
+                id_transakcja INTEGER NOT NULL,
+                id_kasjer INTEGER NOT NULL,
+                Data TIMESTAMP NOT NULL,
+                CONSTRAINT transakcja_pk PRIMARY KEY (id_transakcja)
+)
+80483116 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Menedzer (
+                id_menedzer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Biuro VARCHAR(50) NOT NULL,
+                CONSTRAINT menedzer_pk PRIMARY KEY (id_menedzer)
+)
+80483116 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Sprzatacz (
+                id_sprzatacz INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Sprzet VARCHAR(100) NOT NULL,
+                CONSTRAINT sprzatacz_pk PRIMARY KEY (id_sprzatacz)
+)
+80483117 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Gatunek (
+                id_gatunek INTEGER NOT NULL,
+                id_dzial INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT gatunek_pk PRIMARY KEY (id_gatunek)
+)
+80483117 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiazka (
+                id_ksiazka INTEGER NOT NULL,
+                id_gatunek INTEGER NOT NULL,
+                Autor VARCHAR(50) NOT NULL,
+                Tytul VARCHAR(50) NOT NULL,
+                Cena DOUBLE PRECISION NOT NULL,
+                CONSTRAINT ksiazka_pk PRIMARY KEY (id_ksiazka)
+)
+80483117 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kopia_Ksiazki (
+                id_kopia INTEGER NOT NULL,
+                id_transakcja INTEGER NOT NULL,
+                id_ksiazka INTEGER NOT NULL,
+                CONSTRAINT kopia_ksiazki_pk PRIMARY KEY (id_kopia)
+)
+80483117 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+ALTER TABLE public.Ksiegarnia ADD CONSTRAINT wlasciciel_ksiegarnia_fk
+FOREIGN KEY (id_wlasciciel)
+REFERENCES public.Wlasciciel (id_wlasciciel)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483118 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT ksiegarnia_dzial_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483118 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kadra_Pracownicza ADD CONSTRAINT ksiegarnia_kadra_pracownicza_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483118 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Pracownik ADD CONSTRAINT kadra_pracownicza_pracownik_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483118 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT kadra_pracownicza_dzial_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483119 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kasjer ADD CONSTRAINT pracownik_kasjer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483119 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Sprzatacz ADD CONSTRAINT pracownik_sprzatacz_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483119 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Menedzer ADD CONSTRAINT pracownik_menedzer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483120 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Gatunek ADD CONSTRAINT dzial_gatunek_fk
+FOREIGN KEY (id_dzial)
+REFERENCES public.Dzial (id_dzial)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483120 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Transakcja ADD CONSTRAINT kasjer_transakcja_fk
+FOREIGN KEY (id_kasjer)
+REFERENCES public.Kasjer (id_kasjer)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483120 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT transakcja_kopia_ksiazki_fk
+FOREIGN KEY (id_transakcja)
+REFERENCES public.Transakcja (id_transakcja)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483120 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Ksiazka ADD CONSTRAINT gatunek_ksiazka_fk
+FOREIGN KEY (id_gatunek)
+REFERENCES public.Gatunek (id_gatunek)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483121 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT ksiazka_kopia_ksiazki_fk
+FOREIGN KEY (id_ksiazka)
+REFERENCES public.Ksiazka (id_ksiazka)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80483121 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.swingui.SQLScriptDialog  - The list size is :25
+80589459 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+CREATE TABLE public.Wlasciciel (
+                id_wlasciciel INTEGER NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                CONSTRAINT wlasciciel_pk PRIMARY KEY (id_wlasciciel)
+)
+80589460 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiegarnia (
+                id_ksiegarnia INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                Ulica VARCHAR(50) NOT NULL,
+                Numer VARCHAR(4) NOT NULL,
+                Kod VARCHAR(6) NOT NULL,
+                Miejscowosc VARCHAR(50) NOT NULL,
+                id_wlasciciel INTEGER NOT NULL,
+                CONSTRAINT ksiegarnia_pk PRIMARY KEY (id_ksiegarnia)
+)
+80589460 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kadra_Pracownicza (
+                id_kadra_pracownicza INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT kadra_pracownicza_pk PRIMARY KEY (id_kadra_pracownicza)
+)
+80589460 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Pracownik (
+                id_pracownik INTEGER NOT NULL,
+                Nazwisko VARCHAR(50) NOT NULL,
+                Imie VARCHAR(50) NOT NULL,
+                Plec VARCHAR(1),
+                Telefon VARCHAR(9),
+                Email VARCHAR(50),
+                id_kadra_pracownicza INTEGER NOT NULL,
+                CONSTRAINT pracownik_pk PRIMARY KEY (id_pracownik)
+)
+80589460 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Dzial (
+                id_dzial INTEGER NOT NULL,
+                id_ksiegarnia INTEGER NOT NULL,
+                id_kadra_pracownicza INTEGER NOT NULL,
+                Nazwa VARCHAR(50) NOT NULL,
+                CONSTRAINT dzial_pk PRIMARY KEY (id_dzial)
+)
+80589461 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kasjer (
+                id_kasjer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Stanowisko INTEGER NOT NULL,
+                CONSTRAINT kasjer_pk PRIMARY KEY (id_kasjer)
+)
+80589461 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Transakcja (
+                id_transakcja INTEGER NOT NULL,
+                id_kasjer INTEGER,
+                Data TIMESTAMP NOT NULL,
+                CONSTRAINT transakcja_pk PRIMARY KEY (id_transakcja)
+)
+80589461 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Menedzer (
+                id_menedzer INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Biuro VARCHAR(50) NOT NULL,
+                CONSTRAINT menedzer_pk PRIMARY KEY (id_menedzer)
+)
+80589461 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Sprzatacz (
+                id_sprzatacz INTEGER NOT NULL,
+                id_pracownik INTEGER NOT NULL,
+                Sprzet VARCHAR(100) NOT NULL,
+                CONSTRAINT sprzatacz_pk PRIMARY KEY (id_sprzatacz)
+)
+80589461 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Gatunek (
+                id_gatunek INTEGER NOT NULL,
+                id_dzial INTEGER NOT NULL,
+                Opis VARCHAR(50) NOT NULL,
+                CONSTRAINT gatunek_pk PRIMARY KEY (id_gatunek)
+)
+80589462 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Ksiazka (
+                id_ksiazka INTEGER NOT NULL,
+                id_gatunek INTEGER NOT NULL,
+                Autor VARCHAR(50) NOT NULL,
+                Tytul VARCHAR(50) NOT NULL,
+                Cena DOUBLE PRECISION NOT NULL,
+                CONSTRAINT ksiazka_pk PRIMARY KEY (id_ksiazka)
+)
+80589462 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+CREATE TABLE public.Kopia_Ksiazki (
+                id_kopia INTEGER NOT NULL,
+                id_transakcja INTEGER NOT NULL,
+                id_ksiazka INTEGER NOT NULL,
+                CONSTRAINT kopia_ksiazki_pk PRIMARY KEY (id_kopia)
+)
+80589462 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+
+ALTER TABLE public.Ksiegarnia ADD CONSTRAINT wlasciciel_ksiegarnia_fk
+FOREIGN KEY (id_wlasciciel)
+REFERENCES public.Wlasciciel (id_wlasciciel)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589463 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT ksiegarnia_dzial_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589463 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kadra_Pracownicza ADD CONSTRAINT ksiegarnia_kadra_pracownicza_fk
+FOREIGN KEY (id_ksiegarnia)
+REFERENCES public.Ksiegarnia (id_ksiegarnia)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589463 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Pracownik ADD CONSTRAINT kadra_pracownicza_pracownik_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589463 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Dzial ADD CONSTRAINT kadra_pracownicza_dzial_fk
+FOREIGN KEY (id_kadra_pracownicza)
+REFERENCES public.Kadra_Pracownicza (id_kadra_pracownicza)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589464 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kasjer ADD CONSTRAINT pracownik_kasjer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589465 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Sprzatacz ADD CONSTRAINT pracownik_sprzatacz_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589465 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Menedzer ADD CONSTRAINT pracownik_menedzer_fk
+FOREIGN KEY (id_pracownik)
+REFERENCES public.Pracownik (id_pracownik)
+ON DELETE CASCADE
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589465 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Gatunek ADD CONSTRAINT dzial_gatunek_fk
+FOREIGN KEY (id_dzial)
+REFERENCES public.Dzial (id_dzial)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589465 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Transakcja ADD CONSTRAINT kasjer_transakcja_fk
+FOREIGN KEY (id_kasjer)
+REFERENCES public.Kasjer (id_kasjer)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589465 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT transakcja_kopia_ksiazki_fk
+FOREIGN KEY (id_transakcja)
+REFERENCES public.Transakcja (id_transakcja)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589466 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Ksiazka ADD CONSTRAINT gatunek_ksiazka_fk
+FOREIGN KEY (id_gatunek)
+REFERENCES public.Gatunek (id_gatunek)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589466 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ddl.GenericDDLGenerator  - endStatement: 
+
+ALTER TABLE public.Kopia_Ksiazki ADD CONSTRAINT ksiazka_kopia_ksiazki_fk
+FOREIGN KEY (id_ksiazka)
+REFERENCES public.Ksiazka (id_ksiazka)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE
+80589466 [AWT-EventQueue-0] INFO  ca.sqlpower.architect.swingui.SQLScriptDialog  - The list size is :25
+0    [AWT-EventQueue-0] INFO  ca.sqlpower.architect.ArchitectUtils  - Log4J configured successfully
+490  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+557  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+558  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Beginning to read/merge new pl.ini data
+592  [AWT-EventQueue-0] INFO  ca.sqlpower.sql.PlDotIni  - Finished reading file.
+3285 [Thread-5] ERROR ca.sqlpower.architect.swingui.action.CheckForUpdateAction  - Fail to retrieve current version number!
