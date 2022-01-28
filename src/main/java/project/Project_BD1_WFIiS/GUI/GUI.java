@@ -1,6 +1,7 @@
 package project.Project_BD1_WFIiS.GUI;
 
 import javafx.collections.FXCollections;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,10 +9,10 @@ import javafx.scene.control.*;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import project.Project_BD1_WFIiS.Containers.*;
 import project.Project_BD1_WFIiS.Database.Database;
 import project.Project_BD1_WFIiS.Tools.Tools;
 import javafx.collections.ObservableList;
@@ -22,9 +23,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class GUI {
-    private Stage mainStage, wyswietlStage, dodajStage, transakcjaStage;
+    private final Stage mainStage;
+    private Stage wyswietlStage, dodajStage, transakcjaStage, raportStage;
     private Scene start;
-    private Scene wyswietlScene, dodajScene, transakcjaScene,transakcjaFinalScene;
+    private Scene wyswietlScene, dodajScene, transakcjaScene,transakcjaFinalScene, raportScene;
     private GridPane dodajSceneGrid, transakcjaSceneGrid;
 
     public GUI (Stage s){
@@ -35,6 +37,7 @@ public class GUI {
         wyswietlScene();
         dodajScene();
         transakcjaScene();
+        createRaportScene();
         mainStage.setTitle("app");
         mainStage.setScene(start);
         mainStage.show();
@@ -67,19 +70,35 @@ public class GUI {
             transakcjaStage.setScene(transakcjaScene);
             transakcjaStage.show();
         });
-        Label label = new Label("\t\t\t\t\t\t   Wybierz dzialanie");
 
-        HBox layoutButton = new HBox(wyswietlButton,dodajButton,transakcjaButton);
+        Button raportButton = new Button("Sprawdź raporty");
+        raportButton.setOnAction(e->{
+            raportStage = new Stage();
+            raportStage.initModality(Modality.APPLICATION_MODAL);
+            raportStage.setTitle("Transakcja");
+            raportStage.setScene(raportScene);
+            raportStage.show();
+        });
+        Label label = new Label("Wybierz dzialanie");
+
 
         GridPane grid = new GridPane();
         grid.setPadding(new Insets(20,20,20,20));
         grid.setVgap(10);
         grid.setHgap(10);
 
-        GridPane.setConstraints(label, 0,0);
-        GridPane.setConstraints(layoutButton,0,1);
+        GridPane.setConstraints(label, 0,0,2,1);
+        GridPane.setHalignment(label, HPos.CENTER);
+        GridPane.setConstraints(wyswietlButton,0,1);
+        GridPane.setHalignment(wyswietlButton, HPos.CENTER);
+        GridPane.setConstraints(dodajButton, 1, 1);
+        GridPane.setHalignment(label, HPos.CENTER);
+        GridPane.setConstraints(transakcjaButton, 0, 2);
+        GridPane.setHalignment(transakcjaButton, HPos.CENTER);
+        GridPane.setConstraints(raportButton,1,2);
+        GridPane.setHalignment(raportButton, HPos.CENTER);
 
-        grid.getChildren().addAll(label, layoutButton);
+        grid.getChildren().addAll(label,wyswietlButton,dodajButton, transakcjaButton,raportButton);
         grid.setAlignment(Pos.CENTER);
 
         start = new Scene(grid,600,200);
@@ -169,14 +188,23 @@ public class GUI {
         GridPane buttonsGrid = new GridPane();
         Label topLabel = new Label("Wybierz tabele do dodania lub usunięcia rekordu");
         GridPane.setConstraints(topLabel, 0,0,2,1);
+        GridPane.setHalignment(topLabel, HPos.CENTER);
         GridPane.setConstraints(ksiazkaButton, 0,1);
+        GridPane.setHalignment(ksiazkaButton, HPos.CENTER);
         GridPane.setConstraints(gatunekButton, 1 ,1);
+        GridPane.setHalignment(gatunekButton, HPos.CENTER);
         GridPane.setConstraints(dzialButton, 0, 2);
+        GridPane.setHalignment(dzialButton, HPos.CENTER);
         GridPane.setConstraints(menedzerButton, 1,2);
+        GridPane.setHalignment(menedzerButton, HPos.CENTER);
         GridPane.setConstraints(kasjerButton, 0,3);
+        GridPane.setHalignment(kasjerButton, HPos.CENTER);
         GridPane.setConstraints(sprzataczButton,1,3);
+        GridPane.setHalignment(sprzataczButton, HPos.CENTER);
         GridPane.setConstraints(ksiegarniaButton,0,4);
+        GridPane.setHalignment(ksiegarniaButton, HPos.CENTER);
         GridPane.setConstraints(wlascicielButton,1,4);
+        GridPane.setHalignment(wlascicielButton, HPos.CENTER);
         buttonsGrid.setAlignment(Pos.CENTER);
         buttonsGrid.setPadding(new Insets(20,20,20,20));
         buttonsGrid.setVgap(20);
@@ -492,7 +520,7 @@ public class GUI {
                     pracownikPs.setObject(5,emailField.getText());
                     pracownikPs.setObject(6,Integer.parseInt(kadraField.getText()));
                     pracownikPs.executeUpdate();
-                    ResultSet rs = Database.getCONNECTION().prepareStatement("SELECT * FROM pracownikmaxid;", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
+                    ResultSet rs = Database.getCONNECTION().prepareStatement("SELECT * FROM pracownikmaxid();", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
                     rs.next();
                     menedzerPS.setObject(1, Integer.parseInt(rs.getString("max")));
                     menedzerPS.setObject(2,biuroField.getText());
@@ -607,7 +635,7 @@ public class GUI {
                     pracownikPs.setObject(5,emailField.getText());
                     pracownikPs.setObject(6,Integer.parseInt(kadraField.getText()));
                     pracownikPs.executeUpdate();
-                    ResultSet rs = Database.getCONNECTION().prepareStatement("SELECT * FROM pracownikmaxid;", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
+                    ResultSet rs = Database.getCONNECTION().prepareStatement("SELECT * FROM pracownikmaxid();", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
                     rs.next();
                     kasjerPs.setObject(1, Integer.parseInt(rs.getString("max")));
                     kasjerPs.setObject(2,Integer.parseInt(stanowiskoField.getText()));
@@ -722,7 +750,7 @@ public class GUI {
                     pracownikPs.setObject(5,emailField.getText());
                     pracownikPs.setObject(6,Integer.parseInt(kadraField.getText()));
                     pracownikPs.executeUpdate();
-                    ResultSet rs = Database.getCONNECTION().prepareStatement("SELECT * FROM pracownikmaxid;", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
+                    ResultSet rs = Database.getCONNECTION().prepareStatement("SELECT * FROM pracownikmaxid();", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE).executeQuery();
                     rs.next();
                     sprzataczPS.setObject(1, Integer.parseInt(rs.getString("max")));
                     sprzataczPS.setObject(2,sprzetField.getText());
@@ -1028,7 +1056,7 @@ public class GUI {
         gatunekColumn.setCellValueFactory(new PropertyValueFactory<>("opisGatunek"));
 
         tabelaKsiazek.setItems(ksiazkaList);
-        tabelaKsiazek.getColumns().addAll(tytulColumn, autorColumn, gatunekColumn, cenaColumn);
+        tabelaKsiazek.getColumns().addAll( tytulColumn, autorColumn, gatunekColumn, cenaColumn);
         GridPane.setConstraints(tabelaKsiazek, 0,0,3,1);
 
         try{
@@ -1069,9 +1097,7 @@ public class GUI {
 
         Button dodajButton = new Button("Dodaj do zamówienia");
         GridPane.setConstraints(dodajButton,3,1);
-        dodajButton.setOnAction(e->{
-            kupioneKsiazkaList.add(tabelaKsiazek.getSelectionModel().getSelectedItem());
-        });
+        dodajButton.setOnAction(e-> kupioneKsiazkaList.add(tabelaKsiazek.getSelectionModel().getSelectedItem()));
         Button przeprowadButton = new Button("Przeprowadź transakcję");
         GridPane.setConstraints(przeprowadButton, 4,1);
         przeprowadButton.setOnAction(e->{
@@ -1098,4 +1124,117 @@ public class GUI {
         transakcjaStage.setScene(transakcjaFinalScene);
     }
 
+    public void createRaportScene(){
+        Button obrotButton = new Button("Raport Obrotu");
+        Button transakcjaButton = new Button("Raport Transakcji");
+        Button pracownikButton = new Button("Raport Pracowników");
+        Button kasjerButton = new Button("Raport Sprzedaży Kasjerów");
+
+        GridPane.setConstraints(obrotButton,0,1);
+        GridPane.setHalignment(obrotButton, HPos.CENTER);
+        GridPane.setConstraints(pracownikButton, 1, 1);
+        GridPane.setHalignment(pracownikButton, HPos.CENTER);
+        GridPane.setConstraints(transakcjaButton, 0, 2);
+        GridPane.setHalignment(transakcjaButton, HPos.CENTER);
+        GridPane.setConstraints(kasjerButton,1,2);
+        GridPane.setHalignment(kasjerButton, HPos.CENTER);
+
+        obrotButton.setOnAction(e -> raportStage.setScene(createObrotRaportScene()));
+        transakcjaButton.setOnAction(e -> raportStage.setScene(createTransakcjaRaport()));
+        pracownikButton.setOnAction(e -> raportStage.setScene(createPracownikRaport()));
+        kasjerButton.setOnAction(e -> raportStage.setScene(createKasjerRaport()));
+
+
+        GridPane grid = new GridPane();
+        grid.setPadding(new Insets(20,20,20,20));
+        grid.setVgap(10);
+        grid.setHgap(10);
+
+        grid.getChildren().addAll(obrotButton, transakcjaButton, pracownikButton, kasjerButton);
+        raportScene = new Scene(grid);
+    }
+
+    public Scene createObrotRaportScene(){
+        GridPane grid = new GridPane();
+        TableView<RaportObrot> tableView = Database.raportObrot();
+        GridPane.setConstraints(tableView, 0, 0);
+
+        Button button = new Button("Cofnij");
+        GridPane.setConstraints(button, 0, 1);
+        GridPane.setHalignment(button, HPos.CENTER);
+
+        button.setOnAction(e->{
+            createRaportScene();
+            raportStage.setScene(raportScene);
+        });
+
+        grid.getChildren().addAll(tableView,button);
+
+
+        grid.setAlignment(Pos.CENTER);
+        return new Scene(grid);
+    }
+
+    public Scene createTransakcjaRaport(){
+        GridPane grid = new GridPane();
+        TableView<RaportTransakcja> tableView = Database.raportTransakcja();
+        GridPane.setConstraints(tableView, 0, 0);
+
+        Button button = new Button("Cofnij");
+        GridPane.setConstraints(button, 0, 1);
+        GridPane.setHalignment(button, HPos.CENTER);
+
+        button.setOnAction(e->{
+            createRaportScene();
+            raportStage.setScene(raportScene);
+        });
+
+        grid.getChildren().addAll(tableView,button);
+
+
+        grid.setAlignment(Pos.CENTER);
+        return new Scene(grid);
+    }
+
+    public Scene createPracownikRaport(){
+        GridPane grid = new GridPane();
+        TableView<RaportPracownik> tableView = Database.raportPracownik();
+        GridPane.setConstraints(tableView, 0, 0);
+
+        Button button = new Button("Cofnij");
+        GridPane.setConstraints(button, 0, 1);
+        GridPane.setHalignment(button, HPos.CENTER);
+
+        button.setOnAction(e->{
+            createRaportScene();
+            raportStage.setScene(raportScene);
+        });
+
+        grid.getChildren().addAll(tableView,button);
+
+
+        grid.setAlignment(Pos.CENTER);
+        return new Scene(grid);
+    }
+
+    public Scene createKasjerRaport(){
+        GridPane grid = new GridPane();
+        TableView<RaportKasjer> tableView = Database.raportKasjer();
+        GridPane.setConstraints(tableView, 0, 0);
+
+        Button button = new Button("Cofnij");
+        GridPane.setConstraints(button, 0, 1);
+        GridPane.setHalignment(button, HPos.CENTER);
+
+        button.setOnAction(e->{
+            createRaportScene();
+            raportStage.setScene(raportScene);
+        });
+
+        grid.getChildren().addAll(tableView,button);
+
+
+        grid.setAlignment(Pos.CENTER);
+        return new Scene(grid);
+    }
 }

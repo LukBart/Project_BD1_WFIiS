@@ -1,4 +1,4 @@
-package project.Project_BD1_WFIiS.GUI;
+package project.Project_BD1_WFIiS.Containers;
 
 public class Ksiazka{
     private int id;
@@ -7,7 +7,7 @@ public class Ksiazka{
     private double cena;
     private String opisGatunek;
 
-    Ksiazka(int id, String tytul, String autor, double cena, String opisGatunek){
+    public Ksiazka(int id, String tytul, String autor, double cena, String opisGatunek){
         this.id = id;
         this.tytul = tytul;
         this.autor = autor;

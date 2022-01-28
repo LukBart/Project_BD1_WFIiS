@@ -1,6 +1,10 @@
 package project.Project_BD1_WFIiS.Database;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
+import project.Project_BD1_WFIiS.Containers.*;
 import project.Project_BD1_WFIiS.Tools.Tools;
 
 import java.sql.*;
@@ -12,7 +16,8 @@ public class Database {
     private final static String USER = "szfpcian";
     private final static String PASSWORD = "SinRXMpLj9coEhwHRoDztJ6gQKa2BSrd";
     private static Connection CONNECTION;
-    public static Connection connectToBase(){
+
+    public static void connectToBase(){
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException cnfe) {
@@ -30,7 +35,6 @@ public class Database {
             Tools.AlertBox("Error Massage", "Brak polaczenia z baza, dalsza czesc aplikacji nie jest wykonywana.");
         }
         CONNECTION = c;
-        return c;
     }
 
     public static TreeView<String> ksiazkaTreeView() {
@@ -164,7 +168,151 @@ public class Database {
         return CONNECTION;
     }
 
-//    public static TableView raportTransakcji(){
-//
-//    }
+    public static TableView<RaportObrot> raportObrot(){
+        try {
+            PreparedStatement ps = CONNECTION.prepareStatement("SELECT * FROM raportobrot", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = ps.executeQuery();
+
+            ObservableList<RaportObrot> raportObrotList = FXCollections.observableArrayList();
+            TableView<RaportObrot> raportObrotTable = new TableView<>();
+            TableColumn<RaportObrot, String> nazwaColumn = new TableColumn<>("Nazwa");
+            nazwaColumn.setMinWidth(150);
+            nazwaColumn.setCellValueFactory(new PropertyValueFactory<>("nazwa"));
+            TableColumn<RaportObrot, String> wlascicielColumn = new TableColumn<>("Właściciel");
+            wlascicielColumn.setMinWidth(150);
+            wlascicielColumn.setCellValueFactory(new PropertyValueFactory<>("wlasciciel"));
+            TableColumn<RaportObrot, Double> obrotColumn = new TableColumn<>("Obrót");
+            obrotColumn.setMinWidth(60);
+            obrotColumn.setCellValueFactory(new PropertyValueFactory<>("obrot"));
+            raportObrotTable.setItems(raportObrotList);
+            raportObrotTable.getColumns().addAll(nazwaColumn, wlascicielColumn, obrotColumn);
+
+            DecimalFormat df = new DecimalFormat("0.00");
+
+            while (rs.next()){
+                raportObrotList.add(new RaportObrot(rs.getString("nazwa"),
+                        rs.getString("nazwisko") +" "+ rs.getString("imie"),
+                        df.format(rs.getDouble("obrot"))));
+            }
+            return raportObrotTable;
+        }catch (SQLException e){
+            Tools.AlertBox("Error", "Błąd podczas wyświetlania raportu transakcji:\n" + e);
+        }
+        return null;
+    }
+    public static TableView<RaportTransakcja> raportTransakcja(){
+        try {
+            PreparedStatement ps = CONNECTION.prepareStatement("SELECT * FROM RaportTransakcja", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = ps.executeQuery();
+
+            ObservableList<RaportTransakcja> raportTranskacjaList = FXCollections.observableArrayList();
+            TableView<RaportTransakcja> raportTransakcjaTable = new TableView<>();
+            TableColumn<RaportTransakcja, String> kasjerColumn = new TableColumn<>("Kasjer");
+            kasjerColumn.setMinWidth(200);
+            kasjerColumn.setCellValueFactory(new PropertyValueFactory<>("kasjer"));
+            TableColumn<RaportTransakcja, String> stanowiskoColumn = new TableColumn<>("Stanowisko");
+            stanowiskoColumn.setMinWidth(30);
+            stanowiskoColumn.setCellValueFactory(new PropertyValueFactory<>("stanowisko"));
+            TableColumn<RaportTransakcja, Integer> transakcjaColumn = new TableColumn<>("ID transakcji");
+            transakcjaColumn.setMinWidth(30);
+            transakcjaColumn.setCellValueFactory(new PropertyValueFactory<>("transakcja"));
+            TableColumn<RaportTransakcja, String> dataColumn = new TableColumn<>("Data");
+            dataColumn.setMinWidth(60);
+            dataColumn.setCellValueFactory(new PropertyValueFactory<>("data"));
+            TableColumn<RaportTransakcja, Double> sumaColumn = new TableColumn<>("Wartość transakcji");
+            sumaColumn.setMinWidth(60);
+            sumaColumn.setCellValueFactory(new PropertyValueFactory<>("suma"));
+            raportTransakcjaTable.setItems(raportTranskacjaList);
+            raportTransakcjaTable.getColumns().addAll(kasjerColumn, stanowiskoColumn, transakcjaColumn, dataColumn, sumaColumn);
+
+            DecimalFormat df = new DecimalFormat("0.00");
+            while (rs.next()){
+                raportTranskacjaList.add(new RaportTransakcja(rs.getString("nazwisko") + " " + rs.getString("imie"),
+                        rs.getString("stanowisko"),
+                        rs.getInt("id_transakcja"),
+                        rs.getString("data"),
+                        df.format(rs.getDouble("sum"))));
+            }
+            return raportTransakcjaTable;
+        }catch (SQLException e){
+            Tools.AlertBox("Error", "Błąd podczas wyświetlania raportu transakcji:\n" + e);
+        }
+        return null;
+    }
+
+    public static TableView<RaportPracownik> raportPracownik(){
+        try {
+            PreparedStatement ps = CONNECTION.prepareStatement("SELECT * FROM raportPracownikow", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = ps.executeQuery();
+
+            ObservableList<RaportPracownik> raportPracownikList = FXCollections.observableArrayList();
+            TableView<RaportPracownik> RaportPracownikTable = new TableView<>();
+            TableColumn<RaportPracownik, String> nazwaColumn = new TableColumn<>("Nazwa Księgarni");
+            nazwaColumn.setMinWidth(120);
+            nazwaColumn.setCellValueFactory(new PropertyValueFactory<>("nazwa"));
+            TableColumn<RaportPracownik, String> menedzerowieColumn = new TableColumn<>("Liczba Menedzerów");
+            menedzerowieColumn.setMinWidth(20);
+            menedzerowieColumn.setCellValueFactory(new PropertyValueFactory<>("menedzerowie"));
+            TableColumn<RaportPracownik, String> kasjerzyColumn = new TableColumn<>("Liczba Kasjerów");
+            kasjerzyColumn.setMinWidth(20);
+            kasjerzyColumn.setCellValueFactory(new PropertyValueFactory<>("kasjerzy"));
+            TableColumn<RaportPracownik, Integer> sprzataczeColumn = new TableColumn<>("Liczba Sprzątaczy");
+            sprzataczeColumn.setMinWidth(20);
+            sprzataczeColumn.setCellValueFactory(new PropertyValueFactory<>("sprzatacze"));
+            RaportPracownikTable.setItems(raportPracownikList);
+            RaportPracownikTable.getColumns().addAll(nazwaColumn, menedzerowieColumn, kasjerzyColumn, sprzataczeColumn);
+
+            DecimalFormat df = new DecimalFormat("0.00");
+            while (rs.next()){
+                raportPracownikList.add(new RaportPracownik(rs.getString("nazwa"),
+                        rs.getString("kasjerzy"),
+                        rs.getString("sprzatacze"),
+                        rs.getString("menedzerowie")));
+            }
+            return RaportPracownikTable;
+        }catch (SQLException e){
+            Tools.AlertBox("Error", "Błąd podczas wyświetlania raportu transakcji:\n" + e);
+        }
+        return null;
+    }
+
+    public static TableView<RaportKasjer> raportKasjer(){
+        try {
+            PreparedStatement ps = CONNECTION.prepareStatement("SELECT * FROM raportKasjer", ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = ps.executeQuery();
+
+            ObservableList<RaportKasjer> raportKasjerList = FXCollections.observableArrayList();
+            TableView<RaportKasjer> raportKasjerTable = new TableView<>();
+            TableColumn<RaportKasjer, String> nazwaColumn = new TableColumn<>("Nazwa Księgarni");
+            nazwaColumn.setMinWidth(120);
+            nazwaColumn.setCellValueFactory(new PropertyValueFactory<>("nazwa"));
+            TableColumn<RaportKasjer, String> idColumn = new TableColumn<>("ID Kasjera");
+            idColumn.setMinWidth(60);
+            idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+            TableColumn<RaportKasjer, String> kasjerColumn = new TableColumn<>("Imie i Nazwisko");
+            kasjerColumn.setMinWidth(30);
+            kasjerColumn.setCellValueFactory(new PropertyValueFactory<>("kasjer"));
+            TableColumn<RaportKasjer, String> transakcjeColumn = new TableColumn<>("Liczba Transakcji");
+            transakcjeColumn.setMinWidth(30);
+            transakcjeColumn.setCellValueFactory(new PropertyValueFactory<>("ilosc"));
+            TableColumn<RaportKasjer, String> sumaColumn = new TableColumn<>("Suma Transakcji");
+            sumaColumn.setMinWidth(30);
+            sumaColumn.setCellValueFactory(new PropertyValueFactory<>("suma"));
+            raportKasjerTable.setItems(raportKasjerList);
+            raportKasjerTable.getColumns().addAll(nazwaColumn, idColumn, kasjerColumn, transakcjeColumn, sumaColumn);
+
+            DecimalFormat df = new DecimalFormat("0.00");
+            while (rs.next()){
+                raportKasjerList.add(new RaportKasjer(rs.getString("nazwa"),
+                        rs.getString("id_kasjer"),
+                        rs.getString("imie") + " " + rs.getString("nazwisko"),
+                        rs.getString("count"),
+                        df.format(rs.getDouble("sum"))));
+            }
+            return raportKasjerTable;
+        }catch (SQLException e){
+            Tools.AlertBox("Error", "Błąd podczas wyświetlania raportu transakcji:\n" + e);
+        }
+        return null;
+    }
 }

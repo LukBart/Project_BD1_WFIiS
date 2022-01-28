@@ -10,5 +10,7 @@ module project.projekt {
     exports project.Project_BD1_WFIiS;
     exports project.Project_BD1_WFIiS.GUI;
     opens project.Project_BD1_WFIiS.GUI to javafx.fxml;
+    exports project.Project_BD1_WFIiS.Containers;
+    opens project.Project_BD1_WFIiS.Containers to javafx.fxml;
 }
 
